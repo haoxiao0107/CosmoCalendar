@@ -7,6 +7,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.OrientationHelper;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,9 +56,9 @@ public class CalendarDialog extends Dialog implements View.OnClickListener,
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         setContentView(R.layout.dialog_calendar);
-        getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        getWindow().getAttributes().gravity = Gravity.TOP;
+        getWindow().getAttributes().gravity = Gravity.BOTTOM;
 
         initViews();
     }

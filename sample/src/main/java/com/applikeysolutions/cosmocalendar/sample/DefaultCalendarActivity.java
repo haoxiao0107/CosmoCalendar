@@ -12,6 +12,9 @@ import android.view.MenuItem;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.applikeysolutions.cosmocalendar.dialog.CalendarDialog;
+import com.applikeysolutions.cosmocalendar.dialog.OnDaysSelectionListener;
+import com.applikeysolutions.cosmocalendar.model.Day;
 import com.applikeysolutions.cosmocalendar.selection.MultipleSelectionManager;
 import com.applikeysolutions.cosmocalendar.selection.criteria.BaseCriteria;
 import com.applikeysolutions.cosmocalendar.selection.criteria.WeekDayCriteria;
@@ -167,6 +170,12 @@ public class DefaultCalendarActivity extends AppCompatActivity implements RadioG
         switch (checkedId) {
             case R.id.rb_horizontal:
                 calendarView.setCalendarOrientation(OrientationHelper.HORIZONTAL);
+                new CalendarDialog(this, new OnDaysSelectionListener() {
+                    @Override
+                    public void onDaysSelected(List<Day> selectedDays) {
+                        Toast.makeText(DefaultCalendarActivity.this, "Selected " + calendarView.getSelectedDays().size(), Toast.LENGTH_SHORT).show();
+                    }
+                }).show();
                 break;
 
             case R.id.rb_vertical:

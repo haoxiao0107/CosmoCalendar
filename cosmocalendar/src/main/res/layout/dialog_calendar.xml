@@ -3,12 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@drawable/shape_top_round_white_bg">
+
+    <com.applikeysolutions.cosmocalendar.view.CalendarView
+        android:id="@+id/calendar_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/space_2x"
+        app:orientation="horizontal"
+        app:selectionType="range" />
 
     <FrameLayout
         android:id="@+id/fl_navigation_buttons_bar"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/space_3x"
         android:orientation="horizontal">
 
         <ImageView
@@ -16,10 +26,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:paddingBottom="@dimen/space_1x"
             android:paddingLeft="20dp"
-            android:paddingRight="@dimen/space_1x"
             android:paddingTop="@dimen/space_1x"
+            android:paddingRight="@dimen/space_1x"
+            android:paddingBottom="@dimen/space_1x"
             android:src="@drawable/ic_close_gray" />
 
         <ImageView
@@ -27,18 +37,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|right"
-            android:paddingBottom="@dimen/space_1x"
             android:paddingLeft="@dimen/space_1x"
-            android:paddingRight="20dp"
             android:paddingTop="@dimen/space_1x"
+            android:paddingRight="20dp"
+            android:paddingBottom="@dimen/space_1x"
             android:src="@drawable/ic_done_gray" />
 
     </FrameLayout>
-
-    <com.applikeysolutions.cosmocalendar.view.CalendarView
-        android:id="@+id/calendar_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:selectionType="multiple" />
-
 </LinearLayout>
