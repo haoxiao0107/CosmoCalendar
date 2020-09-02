@@ -380,6 +380,160 @@ public class CalendarView extends RelativeLayout implements OnDaySelectedListene
         }
     }
 
+    public void selectToday() {
+        if (monthAdapter != null) {
+            Calendar calendar = Calendar.getInstance();
+            Day lastDay = new Day(calendar);
+            List<Day> days = monthAdapter.getData().get(SettingsManager.DEFAULT_MONTH_COUNT / 2).getDays();
+            int lastDayIndex = 0;
+            for (int i = 0; i < days.size(); i++) {
+                if (days.get(i).equals(lastDay)) {
+                    lastDayIndex = i;
+                    break;
+                }
+            }
+            monthAdapter.getData().get(SettingsManager.DEFAULT_MONTH_COUNT / 2).getDays().get(lastDayIndex).setSelected(true);
+            ((RangeSelectionManager) selectionManager).toggleDay(monthAdapter.getData().get(SettingsManager.DEFAULT_MONTH_COUNT / 2).getDays().get(lastDayIndex));
+
+            monthAdapter.notifyDataSetChanged();
+            rvMonths.scrollToPosition(SettingsManager.DEFAULT_MONTH_COUNT / 2);
+        }
+    }
+
+    public void selectLastSevenDay() {
+        if (monthAdapter != null) {
+            Calendar calendar = Calendar.getInstance();
+            Day lastDay = new Day(calendar);
+            List<Day> days = monthAdapter.getData().get(SettingsManager.DEFAULT_MONTH_COUNT / 2).getDays();
+            int lastDayIndex = 0;
+            for (int i = 0; i < days.size(); i++) {
+                if (days.get(i).equals(lastDay)) {
+                    lastDayIndex = i;
+                    break;
+                }
+            }
+            monthAdapter.getData().get(SettingsManager.DEFAULT_MONTH_COUNT / 2).getDays().get(lastDayIndex).setSelected(true);
+
+            calendar.add(Calendar.DAY_OF_MONTH, -6);
+            Day firstDay = new Day(calendar);
+            int firstDayIndex = lastDayIndex - 6;
+            if (firstDayIndex < 0) {
+                days = monthAdapter.getData().get(SettingsManager.DEFAULT_MONTH_COUNT / 2 - 1).getDays();
+                for (int i = 0; i < days.size(); i++) {
+                    if (days.get(i).equals(firstDay)) {
+                        firstDayIndex = i;
+                        break;
+                    }
+                }
+                monthAdapter.getData().get(SettingsManager.DEFAULT_MONTH_COUNT / 2 - 1).getDays().get(firstDayIndex).setSelected(true);
+                ((RangeSelectionManager) selectionManager).setDays(Pair.create(monthAdapter.getData().get(SettingsManager.DEFAULT_MONTH_COUNT / 2 - 1).getDays().get(firstDayIndex)
+                        , monthAdapter.getData().get(SettingsManager.DEFAULT_MONTH_COUNT / 2).getDays().get(lastDayIndex)));
+            } else {
+                firstDayIndex = -1;
+                for (int i = 0; i < days.size(); i++) {
+                    if (days.get(i).equals(firstDay) && days.get(i).isBelongToMonth()) {
+                        firstDayIndex = i;
+                        monthAdapter.getData().get(SettingsManager.DEFAULT_MONTH_COUNT / 2).getDays().get(firstDayIndex).setSelected(true);
+                        ((RangeSelectionManager) selectionManager).setDays(Pair.create(monthAdapter.getData().get(SettingsManager.DEFAULT_MONTH_COUNT / 2).getDays().get(firstDayIndex)
+                                , monthAdapter.getData().get(SettingsManager.DEFAULT_MONTH_COUNT / 2).getDays().get(lastDayIndex)));
+                        break;
+                    }
+                }
+                if (firstDayIndex == -1) {
+                    days = monthAdapter.getData().get(SettingsManager.DEFAULT_MONTH_COUNT / 2 - 1).getDays();
+                    for (int i = 0; i < days.size(); i++) {
+                        if (days.get(i).equals(firstDay)) {
+                            firstDayIndex = i;
+                            break;
+                        }
+                    }
+                    monthAdapter.getData().get(SettingsManager.DEFAULT_MONTH_COUNT / 2 - 1).getDays().get(firstDayIndex).setSelected(true);
+                    ((RangeSelectionManager) selectionManager).setDays(Pair.create(monthAdapter.getData().get(SettingsManager.DEFAULT_MONTH_COUNT / 2 - 1).getDays().get(firstDayIndex)
+                            , monthAdapter.getData().get(SettingsManager.DEFAULT_MONTH_COUNT / 2).getDays().get(lastDayIndex)));
+                }
+            }
+
+            monthAdapter.notifyDataSetChanged();
+            rvMonths.scrollToPosition(SettingsManager.DEFAULT_MONTH_COUNT / 2);
+            displaySelectedDaysRange();
+        }
+    }
+
+    public void selectLastMonthDay() {
+        if (monthAdapter != null) {
+            Calendar calendar = Calendar.getInstance();
+            Day lastDay = new Day(calendar);
+            List<Day> days = monthAdapter.getData().get(SettingsManager.DEFAULT_MONTH_COUNT / 2).getDays();
+            int lastDayIndex = 0;
+            for (int i = 0; i < days.size(); i++) {
+                if (days.get(i).equals(lastDay)) {
+                    lastDayIndex = i;
+                    break;
+                }
+            }
+            monthAdapter.getData().get(SettingsManager.DEFAULT_MONTH_COUNT / 2).getDays().get(lastDayIndex).setSelected(true);
+
+            int lastMonth = calendar.get(Calendar.MONTH);
+            calendar.add(Calendar.DAY_OF_MONTH, -30);
+            Day firstDay = new Day(calendar);
+            int firstMonth = calendar.get(Calendar.MONTH);
+            int dif = lastMonth - firstMonth;
+            int firstDayIndex = lastDayIndex - 30;
+            if (dif == 2) {
+                days = monthAdapter.getData().get(SettingsManager.DEFAULT_MONTH_COUNT / 2 - 2).getDays();
+                for (int i = 0; i < days.size(); i++) {
+                    if (days.get(i).equals(firstDay)) {
+                        firstDayIndex = i;
+                        break;
+                    }
+                }
+                monthAdapter.getData().get(SettingsManager.DEFAULT_MONTH_COUNT / 2 - 2).getDays().get(firstDayIndex).setSelected(true);
+                ((RangeSelectionManager) selectionManager).setDays(Pair.create(monthAdapter.getData().get(SettingsManager.DEFAULT_MONTH_COUNT / 2 - 2).getDays().get(firstDayIndex)
+                        , monthAdapter.getData().get(SettingsManager.DEFAULT_MONTH_COUNT / 2).getDays().get(lastDayIndex)));
+            } else {
+                if (firstDayIndex < 0) {
+                    days = monthAdapter.getData().get(SettingsManager.DEFAULT_MONTH_COUNT / 2 - 1).getDays();
+                    for (int i = 0; i < days.size(); i++) {
+                        if (days.get(i).equals(firstDay)) {
+                            firstDayIndex = i;
+                            break;
+                        }
+                    }
+                    monthAdapter.getData().get(SettingsManager.DEFAULT_MONTH_COUNT / 2 - 1).getDays().get(firstDayIndex).setSelected(true);
+                    ((RangeSelectionManager) selectionManager).setDays(Pair.create(monthAdapter.getData().get(SettingsManager.DEFAULT_MONTH_COUNT / 2 - 1).getDays().get(firstDayIndex)
+                            , monthAdapter.getData().get(SettingsManager.DEFAULT_MONTH_COUNT / 2).getDays().get(lastDayIndex)));
+                } else {
+                    firstDayIndex = -1;
+                    for (int i = 0; i < days.size(); i++) {
+                        if (days.get(i).equals(firstDay) && days.get(i).isBelongToMonth()) {
+                            firstDayIndex = i;
+                            monthAdapter.getData().get(SettingsManager.DEFAULT_MONTH_COUNT / 2).getDays().get(firstDayIndex).setSelected(true);
+                            ((RangeSelectionManager) selectionManager).setDays(Pair.create(monthAdapter.getData().get(SettingsManager.DEFAULT_MONTH_COUNT / 2).getDays().get(firstDayIndex)
+                                    , monthAdapter.getData().get(SettingsManager.DEFAULT_MONTH_COUNT / 2).getDays().get(lastDayIndex)));
+                            break;
+                        }
+                    }
+                    if (firstDayIndex == -1) {
+                        days = monthAdapter.getData().get(SettingsManager.DEFAULT_MONTH_COUNT / 2 - 1).getDays();
+                        for (int i = 0; i < days.size(); i++) {
+                            if (days.get(i).equals(firstDay)) {
+                                firstDayIndex = i;
+                                break;
+                            }
+                        }
+                        monthAdapter.getData().get(SettingsManager.DEFAULT_MONTH_COUNT / 2 - 1).getDays().get(firstDayIndex).setSelected(true);
+                        ((RangeSelectionManager) selectionManager).setDays(Pair.create(monthAdapter.getData().get(SettingsManager.DEFAULT_MONTH_COUNT / 2 - 1).getDays().get(firstDayIndex)
+                                , monthAdapter.getData().get(SettingsManager.DEFAULT_MONTH_COUNT / 2).getDays().get(lastDayIndex)));
+                    }
+                }
+            }
+
+            monthAdapter.notifyDataSetChanged();
+            rvMonths.scrollToPosition(SettingsManager.DEFAULT_MONTH_COUNT / 2);
+            displaySelectedDaysRange();
+        }
+    }
+
     private void createRecyclerView() {
         rvMonths = new SlowdownRecyclerView(getContext());
         rvMonths.setId(View.generateViewId());

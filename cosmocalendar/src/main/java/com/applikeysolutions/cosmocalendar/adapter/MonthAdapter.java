@@ -166,4 +166,12 @@ public class MonthAdapter extends RecyclerView.Adapter<MonthHolder> {
             notifyDataSetChanged();
         }
     }
+
+    public DaysAdapter getDaysAdapter() {
+        return daysAdapter;
+    }
+
+    public void setDaysAdapter(DaysAdapter daysAdapter) {
+        this.daysAdapter = daysAdapter;
+    }
 }

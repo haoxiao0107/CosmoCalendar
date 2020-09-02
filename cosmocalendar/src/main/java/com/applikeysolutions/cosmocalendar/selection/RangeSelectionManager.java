@@ -76,4 +76,16 @@ public class RangeSelectionManager extends BaseSelectionManager {
             return SelectionState.SINGLE_DAY;
         }
     }
+
+    public void setDays(Pair<Day, Day> days) {
+        this.days = days;
+    }
+
+    public Day getTempDay() {
+        return tempDay;
+    }
+
+    public void setTempDay(Day tempDay) {
+        this.tempDay = tempDay;
+    }
 }

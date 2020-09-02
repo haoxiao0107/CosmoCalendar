@@ -41,6 +41,8 @@ public class DefaultCalendarActivity extends AppCompatActivity implements RadioG
     private MenuItem menuFridays;
     private MenuItem menuThreeMonth;
 
+    private CalendarDialog dialog;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -170,12 +172,17 @@ public class DefaultCalendarActivity extends AppCompatActivity implements RadioG
         switch (checkedId) {
             case R.id.rb_horizontal:
                 calendarView.setCalendarOrientation(OrientationHelper.HORIZONTAL);
-                new CalendarDialog(this, new OnDaysSelectionListener() {
+
+                dialog = new CalendarDialog(this);
+                dialog.setOnDaysSelectionListener(new OnDaysSelectionListener() {
                     @Override
                     public void onDaysSelected(List<Day> selectedDays) {
-                        Toast.makeText(DefaultCalendarActivity.this, "Selected " + calendarView.getSelectedDays().size(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(DefaultCalendarActivity.this, "Selected " + selectedDays.size(), Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
                     }
-                }).show();
+                });
+                dialog.show();
+
                 break;
 
             case R.id.rb_vertical:

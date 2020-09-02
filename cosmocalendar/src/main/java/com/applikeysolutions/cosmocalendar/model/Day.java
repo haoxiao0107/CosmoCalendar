@@ -142,11 +142,11 @@ public class Day {
 
     @Override
     public boolean equals(Object o) {
+        if (o == null /*|| getClass() != o.getClass()*/) {
+            return false;
+        }
         if (this == o) {
             return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
         }
         Day day = (Day) o;
         Calendar anotherCalendar = day.getCalendar();

@@ -7,25 +7,26 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.OrientationHelper;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
-import com.applikeysolutions.cosmocalendar.settings.lists.DisabledDaysCriteria;
-import com.applikeysolutions.cosmocalendar.settings.lists.connected_days.ConnectedDays;
-import com.applikeysolutions.cosmocalendar.settings.lists.connected_days.ConnectedDaysManager;
-import com.applikeysolutions.cosmocalendar.utils.SelectionType;
-import com.applikeysolutions.customizablecalendar.R;
 import com.applikeysolutions.cosmocalendar.model.Day;
+import com.applikeysolutions.cosmocalendar.selection.RangeSelectionManager;
 import com.applikeysolutions.cosmocalendar.settings.appearance.AppearanceInterface;
 import com.applikeysolutions.cosmocalendar.settings.date.DateInterface;
 import com.applikeysolutions.cosmocalendar.settings.lists.CalendarListsInterface;
+import com.applikeysolutions.cosmocalendar.settings.lists.DisabledDaysCriteria;
+import com.applikeysolutions.cosmocalendar.settings.lists.connected_days.ConnectedDays;
+import com.applikeysolutions.cosmocalendar.settings.lists.connected_days.ConnectedDaysManager;
 import com.applikeysolutions.cosmocalendar.settings.selection.SelectionInterface;
+import com.applikeysolutions.cosmocalendar.utils.SelectionType;
 import com.applikeysolutions.cosmocalendar.view.CalendarView;
+import com.applikeysolutions.customizablecalendar.R;
 
 import java.util.List;
 import java.util.Set;
@@ -34,15 +35,20 @@ public class CalendarDialog extends Dialog implements View.OnClickListener,
         AppearanceInterface, DateInterface, CalendarListsInterface, SelectionInterface {
 
     //Views
-    private FrameLayout flNavigationButtonsBar;
-    private ImageView ivCancel;
-    private ImageView ivDone;
+    private LinearLayout llNavigationButtonsBar;
+    private TextView tvCancel;
+    private TextView tvDone;
+    private TextView tv_day;
+    private TextView tv_week;
+    private TextView tv_month;
     private CalendarView calendarView;
+    private Context context;
 
     private OnDaysSelectionListener onDaysSelectionListener;
 
     public CalendarDialog(@NonNull Context context) {
         super(context);
+        this.context = context;
     }
 
     public CalendarDialog(@NonNull Context context, OnDaysSelectionListener onDaysSelectionListener) {
@@ -64,20 +70,26 @@ public class CalendarDialog extends Dialog implements View.OnClickListener,
     }
 
     private void initViews() {
-        flNavigationButtonsBar = (FrameLayout) findViewById(R.id.fl_navigation_buttons_bar);
-        ivCancel = (ImageView) findViewById(R.id.iv_cancel);
-        ivDone = (ImageView) findViewById(R.id.iv_done);
+        llNavigationButtonsBar = (LinearLayout) findViewById(R.id.ll_navigation_buttons_bar);
+        tvCancel = (TextView) findViewById(R.id.tv_cancel);
+        tvDone = (TextView) findViewById(R.id.tv_done);
         calendarView = (CalendarView) findViewById(R.id.calendar_view);
 
         Drawable background = calendarView.getBackground();
 
         if (background instanceof ColorDrawable) {
-            flNavigationButtonsBar.setBackgroundColor(((ColorDrawable) background).getColor());
+            llNavigationButtonsBar.setBackgroundColor(((ColorDrawable) background).getColor());
         }
 
-        ivCancel.setOnClickListener(this);
-        ivDone.setOnClickListener(this);
+        tvCancel.setOnClickListener(this);
+        tvDone.setOnClickListener(this);
 
+        tv_day = findViewById(R.id.tv_day);
+        tv_week = findViewById(R.id.tv_week);
+        tv_month = findViewById(R.id.tv_month);
+        tv_day.setOnClickListener(this);
+        tv_week.setOnClickListener(this);
+        tv_month.setOnClickListener(this);
     }
 
     public void setOnDaysSelectionListener(OnDaysSelectionListener onDaysSelectionListener) {
@@ -87,10 +99,39 @@ public class CalendarDialog extends Dialog implements View.OnClickListener,
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if (id == R.id.iv_cancel) {
+        if (id == R.id.tv_cancel) {
             cancel();
-        } else if (id == R.id.iv_done) {
+        } else if (id == R.id.tv_done) {
             doneClick();
+        }else if (id == R.id.tv_day) {
+            calendarView.clearSelections();
+            tv_week.setBackground(context.getResources().getDrawable(R.drawable.shape_round_white_bg));
+            tv_month.setBackground(context.getResources().getDrawable(R.drawable.shape_round_white_bg));
+            tv_day.setBackground(context.getResources().getDrawable(R.drawable.shape_round_blue_bg));
+            tv_day.setTextColor(context.getResources().getColor(R.color.default_selected_day_text_color));
+            tv_month.setTextColor(context.getResources().getColor(R.color.default_day_text_color));
+            tv_week.setTextColor(context.getResources().getColor(R.color.default_day_text_color));
+            calendarView.selectToday();
+        }else if (id == R.id.tv_week) {
+            calendarView.clearSelections();
+            calendarView.setSelectionType(SelectionType.RANGE);
+            tv_day.setBackground(context.getResources().getDrawable(R.drawable.shape_round_white_bg));
+            tv_month.setBackground(context.getResources().getDrawable(R.drawable.shape_round_white_bg));
+            tv_week.setBackground(context.getResources().getDrawable(R.drawable.shape_round_blue_bg));
+            tv_week.setTextColor(context.getResources().getColor(R.color.default_selected_day_text_color));
+            tv_month.setTextColor(context.getResources().getColor(R.color.default_day_text_color));
+            tv_day.setTextColor(context.getResources().getColor(R.color.default_day_text_color));
+            calendarView.selectLastSevenDay();
+        } else if (id == R.id.tv_month) {
+            calendarView.clearSelections();
+            calendarView.setSelectionType(SelectionType.RANGE);
+            tv_day.setBackground(context.getResources().getDrawable(R.drawable.shape_round_white_bg));
+            tv_week.setBackground(context.getResources().getDrawable(R.drawable.shape_round_white_bg));
+            tv_month.setBackground(context.getResources().getDrawable(R.drawable.shape_round_blue_bg));
+            tv_month.setTextColor(context.getResources().getColor(R.color.default_selected_day_text_color));
+            tv_week.setTextColor(context.getResources().getColor(R.color.default_day_text_color));
+            tv_day.setTextColor(context.getResources().getColor(R.color.default_day_text_color));
+            calendarView.selectLastMonthDay();
         }
     }
 
@@ -99,7 +140,6 @@ public class CalendarDialog extends Dialog implements View.OnClickListener,
         if (onDaysSelectionListener != null) {
             onDaysSelectionListener.onDaysSelected(selectedDays);
         }
-        dismiss();
     }
 
 
